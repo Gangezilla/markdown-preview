@@ -63,31 +63,108 @@
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // var React = require('react');
-	// var ReactDOM = require('react-dom');
-	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var App = function (_React$Component) {
-	  _inherits(App, _React$Component);
+		_inherits(App, _React$Component);
 	
-	  function App() {
-	    _classCallCheck(this, App);
+		function App() {
+			_classCallCheck(this, App);
 	
-	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
-	  }
+			return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+		}
 	
-	  _createClass(App, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'p',
-	        null,
-	        ' Hello React!'
-	      );
-	    }
-	  }]);
+		_createClass(App, [{
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(UserInput, { handleChange: this.handleChange }),
+					_react2.default.createElement(UserOutput, { output: '{this.state.input}' })
+				);
+			}
+		}, {
+			key: 'handleChange',
+			value: function handleChange(e) {
+				console.log(e.target.value);
+				//this.props.callback(event.target.value);
+			}
+		}]);
 	
-	  return App;
+		return App;
+	}(_react2.default.Component);
+	
+	var UserInput = function (_React$Component2) {
+		_inherits(UserInput, _React$Component2);
+	
+		function UserInput(props, context) {
+			_classCallCheck(this, UserInput);
+	
+			var _this2 = _possibleConstructorReturn(this, (UserInput.__proto__ || Object.getPrototypeOf(UserInput)).call(this, props, context));
+	
+			_this2.state = {
+				inputValue: ''
+			};
+			return _this2;
+		}
+	
+		_createClass(UserInput, [{
+			key: 'handleTyping',
+			value: function handleTyping(e) {
+				//setting the state rerenders the react component. when we're typing into the box, react is almost instantly rerendering that component for us, our text isn't being rendered by the HTML.
+				this.setState({
+					inputValue: e.target.value
+				});
+				this.props.handleChange(e);
+				//now need to pass the value up to the parent.
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'h2',
+						null,
+						' ',
+						this.props.name,
+						' '
+					),
+					_react2.default.createElement('input', { className: 'user-input', value: this.state.inputValue, onChange: this.handleTyping.bind(this) })
+				);
+			}
+		}]);
+	
+		return UserInput;
+	}(_react2.default.Component);
+	
+	var UserOutput = function (_React$Component3) {
+		_inherits(UserOutput, _React$Component3);
+	
+		function UserOutput() {
+			_classCallCheck(this, UserOutput);
+	
+			return _possibleConstructorReturn(this, (UserOutput.__proto__ || Object.getPrototypeOf(UserOutput)).apply(this, arguments));
+		}
+	
+		_createClass(UserOutput, [{
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					{ className: 'user-output' },
+					_react2.default.createElement(
+						'span',
+						null,
+						this.props.markup
+					)
+				);
+			}
+		}]);
+	
+		return UserOutput;
 	}(_react2.default.Component);
 	
 	(0, _reactDom.render)(_react2.default.createElement(App, null), document.getElementById('app'));
