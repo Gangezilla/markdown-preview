@@ -1,33 +1,45 @@
 import React from 'react';
 import {render} from 'react-dom';
+var marked=require('marked');
+console.log(marked('I am using __markdown__.'));
 
 class App extends React.Component {
-  render() {
-    return  (
-    <div>
-	    <UserInput handleChange={this.handleChange}/>
-	    <UserOutput output="{this.state.input}"/>
-    </div>
-    );
-  }
+	constructor(props, context) {
+	    super(props, context);
+	    this.state = {
+	      input: ''
+	    };
+	  };
 
-  handleChange(e) {
-  	console.log(e.target.value);
-  	//this.props.callback(event.target.value);
-  }
+	  render() {
+	    return  (
+	    <div>
+		    <UserInput handleChange={this.handleChange.bind(this)}/>
+		    <UserOutput markup={this.state.input}/>
+	    </div>
+	    );
+	  }
+
+	  handleChange(e) {
+	  	var markup = marked(e.target.value);
+	  	console.log(markup);
+	  	this.setState({
+	  		input: markup
+		});
+	  }
 }
 
 class UserInput extends React.Component {
 	constructor(props, context) {
 	    super(props, context);
-
 	    this.state = {
 	      inputValue: ''
 	    };
 	  };
 
 	propTypes: {
-		name: React.PropTypes.string
+		name: React.PropTypes.string,
+		handleChange: React.PropTypes.func
 	}
 
 	handleTyping(e) {
@@ -36,7 +48,6 @@ class UserInput extends React.Component {
       		inputValue: e.target.value
     	});
     	this.props.handleChange(e);
-    	//now need to pass the value up to the parent.
 	}
 
 	render () {
@@ -50,6 +61,10 @@ class UserInput extends React.Component {
 }
 
 class UserOutput extends React.Component {
+	propTypes: {
+		markup: React.PropTypes.string,
+	}
+
 	render() {
 		return (
 			<div className="user-output">
